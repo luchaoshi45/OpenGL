@@ -2,7 +2,7 @@ import vtk
 
 # 创建一个读取器来读取STL文件
 reader = vtk.vtkSTLReader()
-reader.SetFileName("input_data/cudaball/cubeball.stl")
+reader.SetFileName("input_data/cudaball/noimp.stl")
 reader.Update()
 
 # 创建一个mapper将数据映射到图形实体上

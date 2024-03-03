@@ -28,3 +28,6 @@ https://pypi.org/project/gvxr/
 https://github.com/effepivi/gvxr-CMPB/tree/main
 https://github.com/effepivi/gvxr-demos/tree/main
 https://github.com/effepivi/gvxr-tutorials/tree/main
+
+
+求mask算法流程

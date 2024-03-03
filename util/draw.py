@@ -9,6 +9,9 @@ import matplotlib.pyplot as plt # Plotting
 from matplotlib.colors import LogNorm # Look up table
 from matplotlib.colors import PowerNorm # Look up table
 from gvxrPython3 import gvxr  # Simulate X-ray images
+from PIL import Image
+import imgviz
+
 font = {'family' : 'serif',
          'size'   : 15
        }
@@ -30,23 +33,30 @@ def save_screen_shot(outdir: str, outname: str, title: str = "", show: bool = Fa
         plt.axis('off');
     return np.array(screenshot)
 
-def save_xray_image_front(output_data, object, xray_image_front):
+def save_xray_image_front(output_data, object, xray_image_front, name="save_xray_image_front", flip=True):
+    if flip:
+        xray_image_front = np.flipud(xray_image_front)
     out_dir = os.path.join(output_data, object)
-    out = os.path.join(out_dir, "save_xray_image_front.png")
+    if not os.path.exists(out_dir):
+        os.makedirs(out_dir)
+    out = os.path.join(out_dir, name+".jpg")
     xray_image_front = copy.deepcopy(xray_image_front)
     # 保存图像为PNG格式
-    img = 255*xray_image_front/(xray_image_front.max() - xray_image_front.min())
+    # img = 255*xray_image_front/(xray_image_front.max() - xray_image_front.min())
+    img = 255*xray_image_front/(xray_image_front.max())
+
     cv2.imwrite(out, img)
 
-    log_out = os.path.join(out_dir, "save_xray_image_front_log.png")
+    log_out = os.path.join(out_dir, name+"_log.jpg")
     img = np.log10(xray_image_front)
-    img = 255 * img / (img.max() - img.min())
+    img = 255 * img / (img.max())
     cv2.imwrite(log_out, img)
 
 from matplotlib.backends.backend_pdf import PdfPages
-def save_xray_image_front_side_pdf(output_data, object, screen_shot, xray_image_front, xray_image_side):
+def save_xray_image_front_side_pdf(output_data, object, screen_shot, xray_image_front, xray_image_side, flip=True):
+    if flip:
+        xray_image_front = np.flipud(xray_image_front)
     with PdfPages(os.path.join(output_data, object, "save_xray_image_front_side.pdf"), 'w') as pdf:
-
         # Plot the X-ray images
         fig, axarr = plt.subplots(1, 2, figsize=(12.5, 12.5 * 0.618))
         fig.suptitle("X-Ray Imaging Smulation")
@@ -75,3 +85,46 @@ def save_xray_image_front_side_pdf(output_data, object, screen_shot, xray_image_
         fig.colorbar(img4)
         pdf.savefig()
         plt.close()
+
+
+def get_binary_image(output_data, object, xray_image_front, label_pix_value, name="save_xray_image_front", flip=True):
+    if flip:
+        xray_image_front = np.flipud(xray_image_front)
+    out_dir = os.path.join(output_data, object)
+    if not os.path.exists(out_dir):
+        os.makedirs(out_dir)
+    out = os.path.join(out_dir, name+".png")
+    xray_image_front = copy.deepcopy(xray_image_front)
+    # 保存图像为PNG格式
+    img = 255*xray_image_front/(xray_image_front.max())
+    binary_image = np.where(img >= 255-1e-3, 0, label_pix_value)
+    # cv2.imwrite(out, binary_image)
+    return binary_image
+
+    # log_out = os.path.join(out_dir, name+"_log.png")
+    # img = np.log10(img)
+    # img = 255 * img / (img.max())
+    # cv2.imwrite(log_out, img)
+
+def save_binary_image_pattle(output_data, object, num, binary_image):
+    check_and_create_directory(output_data, object)
+    out = os.path.join(output_data, object, "label" + str(num) + ".png")
+    # 创建调色板模式的 8 位图像
+    palette_img = Image.fromarray(binary_image.astype(np.uint8), mode='P')
+
+    # 转换成VOC格式的P模式图像
+    colormap = imgviz.label_colormap()
+    palette_img.putpalette(colormap.flatten())
+    palette_img.save(out)
+
+    # 保存图像
+    # palette_img.save(out)
+
+def check_and_create_directory(dir1, dir11):
+    '''
+    检查目录是否存在，不存在创出
+    dir1/dir11
+    '''
+    dir = os.path.join(dir1, dir11)
+    if not os.path.exists(dir):
+        os.makedirs(dir)
