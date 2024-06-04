@@ -60,7 +60,7 @@ def make_one_mask(input_data, object, num, label_pix_value):
 
 
     main_gray = get_xray_img(json2gvxr, input_data, object, "main.json")
-    save_xray_image_front(output_data, object, main_gray, "img"+ str(num))
+    save_xray_image_front(output_data, object, main_gray, "img"+ str(num),flip=True,log_out=False)
 
 
 make_one_mask(input_data, object, 1, 1)

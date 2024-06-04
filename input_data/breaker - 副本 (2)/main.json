@@ -1,0 +1,91 @@
+{
+    "WindowSize": [800, 450],
+
+    "Detector": {
+        "Position": [0, 1000, 0, "mm"],
+        "UpVector": [0, 0, 1],
+        "NumberOfPixels": [1024, 1024],
+        "Spacing": [1, 1, "mm"]
+    },
+
+    "Source": {
+        "Position": [0, -1000, 0, "mm"],
+        "Shape": "PointSource",
+        "Beam": [
+            {
+                "Energy": 720,
+                "Unit": "keV",
+                "PhotonCount": 1.0
+            }
+        ]
+    },
+
+    "Samples": [
+        {
+            "Label": "imp1",
+            "Path": "imp1.stl",
+            "Unit": "mm",
+            "Material": ["Mixture", [
+                    13, 1.0
+                ]
+            ],
+            "Density": 1.0,
+            "Type" : "inner"
+        },
+        {
+            "Label": "imp2",
+            "Path": "imp2.stl",
+            "Unit": "mm",
+            "Material": ["Mixture", [
+                    13, 1.0
+                ]
+            ],
+            "Density": 1.0,
+            "Type" : "inner"
+        },
+        {
+            "Label": "imp3",
+            "Path": "imp3.stl",
+            "Unit": "mm",
+            "Material": ["Mixture", [
+                    13, 1.0
+                ]
+            ],
+            "Density": 1.0,
+            "Type" : "inner"
+        },
+        {
+            "Label": "imp4",
+            "Path": "imp4.stl",
+            "Unit": "mm",
+            "Material": ["Mixture", [
+                    13, 1.0
+                ]
+            ],
+            "Density": 1.0,
+            "Type" : "inner"
+        },
+        {
+            "Label": "other1",
+            "Path": "other1.stl",
+            "Unit": "mm",
+            "Material": ["Mixture", [
+                    13, 1.0
+                ]
+            ],
+            "Density": 1,
+            "Type" : "inner"
+        },
+        {
+            "Label": "other2",
+            "Path": "other2.stl",
+            "Unit": "mm",
+            "Material": ["Mixture", [
+                    13, 1.0
+                ]
+            ],
+            "Density": 1,
+            "Type" : "inner"
+        }
+    ]
+}

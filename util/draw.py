@@ -12,11 +12,24 @@ from gvxrPython3 import gvxr  # Simulate X-ray images
 from PIL import Image
 import imgviz
 
-font = {'family' : 'serif',
-         'size'   : 15
-       }
+font = {'family': 'serif',
+        'size': 15
+        }
 matplotlib.rc('font', **font)
-
+class Draw:
+    # 初始化方法，用于设置对象的初始状态
+    def __init__(self, outdir: str, object: str):
+        self.name = outdir
+        self.age = object
+        self.check_and_create_directory(outdir, object)
+    def check_and_create_directory(dir1, dir11):
+        '''
+        检查目录是否存在，不存在创出
+        dir1/dir11
+        '''
+        dir = os.path.join(dir1, dir11)
+        if not os.path.exists(dir):
+            os.makedirs(dir)
 def save_screen_shot(outdir: str, outname: str, title: str = "", show: bool = False):
     screenshot = gvxr.takeScreenshot()
     out = os.path.join(outdir, outname)
@@ -33,7 +46,9 @@ def save_screen_shot(outdir: str, outname: str, title: str = "", show: bool = Fa
         plt.axis('off');
     return np.array(screenshot)
 
-def save_xray_image_front(output_data, object, xray_image_front, name="save_xray_image_front", flip=True):
+def save_xray_image_front(output_data, object, xray_image_front,
+                          name="save_xray_image_front", flip=True,
+                          log_out = True):
     if flip:
         xray_image_front = np.flipud(xray_image_front)
     out_dir = os.path.join(output_data, object)
@@ -44,13 +59,13 @@ def save_xray_image_front(output_data, object, xray_image_front, name="save_xray
     # 保存图像为PNG格式
     # img = 255*xray_image_front/(xray_image_front.max() - xray_image_front.min())
     img = 255*xray_image_front/(xray_image_front.max())
-
     cv2.imwrite(out, img)
 
-    log_out = os.path.join(out_dir, name+"_log.jpg")
-    img = np.log10(xray_image_front)
-    img = 255 * img / (img.max())
-    cv2.imwrite(log_out, img)
+    if log_out:
+        log_out = os.path.join(out_dir, name+"_log.jpg")
+        img = np.log10(xray_image_front)
+        img = 255 * img / (img.max())
+        cv2.imwrite(log_out, img)
 
 from matplotlib.backends.backend_pdf import PdfPages
 def save_xray_image_front_side_pdf(output_data, object, screen_shot, xray_image_front, xray_image_side, flip=True):
@@ -87,24 +102,14 @@ def save_xray_image_front_side_pdf(output_data, object, screen_shot, xray_image_
         plt.close()
 
 
-def get_binary_image(output_data, object, xray_image_front, label_pix_value, name="save_xray_image_front", flip=True):
+def get_binary_image(xray_image_front, label_pix_value, flip=True):
     if flip:
         xray_image_front = np.flipud(xray_image_front)
-    out_dir = os.path.join(output_data, object)
-    if not os.path.exists(out_dir):
-        os.makedirs(out_dir)
-    out = os.path.join(out_dir, name+".png")
     xray_image_front = copy.deepcopy(xray_image_front)
     # 保存图像为PNG格式
     img = 255*xray_image_front/(xray_image_front.max())
     binary_image = np.where(img >= 255-1e-3, 0, label_pix_value)
-    # cv2.imwrite(out, binary_image)
     return binary_image
-
-    # log_out = os.path.join(out_dir, name+"_log.png")
-    # img = np.log10(img)
-    # img = 255 * img / (img.max())
-    # cv2.imwrite(log_out, img)
 
 def save_binary_image_pattle(output_data, object, num, binary_image):
     check_and_create_directory(output_data, object)

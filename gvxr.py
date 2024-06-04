@@ -51,7 +51,7 @@ gvxr.setDetectorPixelSize(0.1, 0.1, "mm");
 path = os.path.dirname(gvxr.__file__)
 fname = path + "/welsh-dragon-small.stl"
 
-fname = "input_data/cudaball/cubeball.stl"
+fname = "input_data/breaker/main.stl"
 
 # Load the sample data
 if not os.path.exists(fname):
